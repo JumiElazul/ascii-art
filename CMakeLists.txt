@@ -9,10 +9,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SOURCES
     "src/main.cpp"
+    "src/argument_parser.cpp"
     # "src/image_loader.cpp"
 )
 
 set(HEADERS
+    "include/argument_parser.h"
     # "include/image_loader.h"
 )
 
@@ -30,6 +32,12 @@ else()
     target_compile_options(stb INTERFACE -w)
 endif()
 
+
 add_executable(ascii-art ${SOURCES} ${HEADERS})
-target_include_directories(ascii-art PRIVATE ${PROJECT_SOURCE_DIR})
+
+message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
+target_include_directories(ascii-art PRIVATE include)
 target_link_libraries(ascii-art PRIVATE stb)
+
+find_package(boost_program_options REQUIRED CONFIG)
+target_link_libraries(ascii-art PRIVATE Boost::program_options)
