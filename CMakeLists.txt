@@ -10,12 +10,12 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(SOURCES
     "src/main.cpp"
     "src/argument_parser.cpp"
-    # "src/image_loader.cpp"
+    "src/image_loader.cpp"
 )
 
 set(HEADERS
     "include/argument_parser.h"
-    # "include/image_loader.h"
+    "include/image_loader.h"
 )
 
 find_path(STB_INCLUDE_DIR "stb_image.h")

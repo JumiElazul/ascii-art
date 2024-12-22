@@ -4,10 +4,10 @@
 #include <string>
 #include <vector>
 
-argument_parser::argument_parser(int argc, char** argv, std::vector<std::string>& input_files, std::string& output_file)
-    : _argc(argc), _argv(argv), _input_files(input_files), _output_file(output_file) { }
+argument_parser::argument_parser(int argc, char** argv, int max_width)
+    : input_files(), output_file(), max_width(max_width), _argc(argc), _argv(argv) { }
 
-int argument_parser::parse() const
+int argument_parser::parse()
 {
     try
     {
@@ -19,7 +19,8 @@ int argument_parser::parse() const
         desc.add_options()
             ("help,H", "Produce help message")
             ("input,I", boost::program_options::value<std::vector<std::string>>(), "Name of input files to process into ascii")
-            ("output,O", boost::program_options::value<std::string>()->default_value(default_output_path), "Name of output file to write ascii to");
+            ("output,O", boost::program_options::value<std::string>()->default_value(default_output_path), "Name of output file to write to");
+            ("width,W", boost::program_options::value<int>()->default_value(max_width), "Max width in characters of the output ascii");
 
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::command_line_parser(_argc, _argv).options(desc).positional(p).run(), vm);
@@ -29,15 +30,17 @@ int argument_parser::parse() const
 
         if (vm.count("input"))
         {
-            for (const std::string& s : vm["input"].as<std::vector<std::string>>())
-            {
-                _input_files.push_back(s);
-            }
+            input_files = vm["input"].as<std::vector<std::string>>();
         }
 
         if (vm.count("output"))
         {
-            _output_file = vm["output"].as<std::string>();
+            output_file = vm["output"].as<std::string>();
+        }
+
+        if (vm.count("width"))
+        {
+            max_width = vm["width"].as<int>();
         }
         return 0;
     }
@@ -51,8 +54,10 @@ int argument_parser::parse() const
 void argument_parser::print_args() const
 {
     std::cout << "- Input files -\n";
-    for (const std::string& s : _input_files)
-        std::cout << s << '\n';
+    for (const std::string& s : input_files)
+        std::cout << s << " : ";
 
-    std::cout << "- Output file -\n" << _output_file << '\n';
+    std::cout << "- Output file -\n" << output_file << '\n';
+    std::cout << "- Max width -\n";
+    std::cout << max_width << '\n';
 }

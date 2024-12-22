@@ -8,15 +8,18 @@ class argument_parser
 static constexpr const char* const default_output_path = "output.txt";
 
 public:
-    argument_parser(int argc, char** argv, std::vector<std::string>& input_files, std::string& output_file);
-    int parse() const;
+    std::vector<std::string> input_files;
+    std::string output_file;
+    int max_width;
+
+    argument_parser(int argc, char** argv, int max_width = 80);
+
+    int parse();
     void print_args() const;
 
 private:
     int _argc;
     char** _argv;
-    std::vector<std::string>& _input_files;
-    std::string& _output_file;
 };
 
 #endif
