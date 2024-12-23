@@ -2,7 +2,6 @@
 #include "image_loader.h"
 #include <vector>
 #include <string>
-#include <iostream>
 
 int main(int argc, char** argv)
 {

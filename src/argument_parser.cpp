@@ -19,9 +19,8 @@ int argument_parser::parse()
         desc.add_options()
             ("help,H", "Produce help message")
             ("input,I", boost::program_options::value<std::vector<std::string>>(), "Name of input files to process into ascii")
-            ("output,O", boost::program_options::value<std::string>()->default_value(default_output_path), "Name of output file to write to");
+            ("output,O", boost::program_options::value<std::string>()->default_value(default_output_path), "Name of output file to write to")
             ("width,W", boost::program_options::value<int>()->default_value(max_width), "Max width in characters of the output ascii");
-
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::command_line_parser(_argc, _argv).options(desc).positional(p).run(), vm);
         boost::program_options::notify(vm);
@@ -49,15 +48,20 @@ int argument_parser::parse()
         std::cerr << e.what() << '\n';
         return 1;
     }
+    catch (...) 
+    {
+        std::cerr << "Exception swallower\n";
+        return 1; 
+    }
 }
 
 void argument_parser::print_args() const
 {
     std::cout << "- Input files -\n";
     for (const std::string& s : input_files)
-        std::cout << s << " : ";
+        std::cout << s << " ";
 
-    std::cout << "- Output file -\n" << output_file << '\n';
+    std::cout << "\n- Output file -\n" << output_file << '\n';
     std::cout << "- Max width -\n";
     std::cout << max_width << '\n';
 }
