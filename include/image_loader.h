@@ -1,24 +1,24 @@
 #ifndef JUMI_ASCII_ART_IMAGE_LOADER_H
 #define JUMI_ASCII_ART_IMAGE_LOADER_H
 #include <string>
+#include <iosfwd>
 
-struct image
+class image
 {
+public:
     int width;
     int height;
     int color_channels;
     unsigned char* data;
+
+    image(const std::string& image_path);
+    ~image();
+    image(const image& rhs) = delete;
+    image& operator=(const image& rhs) = delete;
+    image(image&& rhs) noexcept;
+    image& operator=(image&& rhs) noexcept;
 };
 
-class image_loader
-{
-public:
-    image_loader(const std::string& image_path);
-    ~image_loader();
-    inline const image& img() const noexcept { return _img; }
-
-private:
-    image _img;
-};
+std::ostream& operator<<(std::ostream& os, const image& img);
 
 #endif

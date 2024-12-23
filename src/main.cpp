@@ -1,3 +1,4 @@
+#include "application.h"
 #include "argument_parser.h"
 #include "image_loader.h"
 #include <vector>
@@ -10,14 +11,21 @@ int main(int argc, char** argv)
     if (args.parse() != 0)
         return 1;
 
+    args.print_args();
+
     const std::vector<std::string>& input_files = args.input_files;
     const std::string& output_file = args.output_file;
+    std::vector<image> images;
+    images.reserve(input_files.size());
 
     for (const std::string& image_path : input_files)
     {
-        image_loader img(image_path);
-
+        image img(image_path);
+        if (img.data)
+        {
+            images.emplace_back(std::move(img));
+        }
     }
 
-    args.print_args();
+    application app(std::move(images));
 }

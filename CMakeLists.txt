@@ -8,12 +8,15 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 set(SOURCES
-    "src/main.cpp"
+    "src/application.cpp"
+
     "src/argument_parser.cpp"
     "src/image_loader.cpp"
 )
 
 set(HEADERS
+    "include/application.h"
+
     "include/argument_parser.h"
     "include/image_loader.h"
 )
@@ -33,11 +36,13 @@ else()
 endif()
 
 
-add_executable(ascii-art ${SOURCES} ${HEADERS})
+add_executable(ascii-art "src/main.cpp")
+add_library(ascii-art-lib STATIC ${SOURCES} ${HEADERS})
 
-message(STATUS "PROJECT_SOURCE_DIR: ${PROJECT_SOURCE_DIR}")
-target_include_directories(ascii-art PRIVATE include)
-target_link_libraries(ascii-art PRIVATE stb)
+target_include_directories(ascii-art-lib PUBLIC include)
+target_link_libraries(ascii-art-lib PRIVATE stb)
 
 find_package(boost_program_options REQUIRED CONFIG)
-target_link_libraries(ascii-art PRIVATE Boost::program_options)
+target_link_libraries(ascii-art-lib PRIVATE Boost::program_options)
+
+target_link_libraries(ascii-art ascii-art-lib)
