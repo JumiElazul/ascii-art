@@ -36,6 +36,8 @@ image& image::operator=(image&& rhs) noexcept
 {
     if (this != &rhs)
     {
+        stbi_image_free(data);
+
         width = rhs.width;
         height = rhs.height;
         color_channels = rhs.color_channels;
@@ -48,6 +50,38 @@ image& image::operator=(image&& rhs) noexcept
     }
 
     return *this;
+}
+
+void image::resize(int max_width)
+{
+    if (!data)
+        return;
+
+    if (width <= max_width)
+        return;
+
+    int new_width = max_width;
+    float aspect_ratio = static_cast<float>(height) / static_cast<float>(width);
+    int new_height = static_cast<int>(aspect_ratio * max_width);
+
+    unsigned char* new_data = (unsigned char*)malloc(new_width * new_height * color_channels);
+    if (!new_data)
+    {
+        std::cerr << "Failed to allocate memory for resized image.\n";
+        return;
+    }
+
+    stbir_resize_uint8_linear(
+        data, width, height, 0,
+        new_data, new_width, new_height, 0,
+        (stbir_pixel_layout)color_channels
+    );
+
+    stbi_image_free(data);
+
+    data = new_data;
+    width = new_width;
+    height = new_height;
 }
 
 std::ostream& operator<<(std::ostream& os, const image& img)

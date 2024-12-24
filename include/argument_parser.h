@@ -6,13 +6,13 @@
 class argument_parser
 {
 static constexpr const char* const default_output_path = "output.txt";
-static constexpr int default_max_width = 80;
 public:
     std::vector<std::string> input_files;
     std::string output_file;
     int max_width;
+    int ramp;
 
-    argument_parser(int argc, char** argv, int max_width = default_max_width);
+    argument_parser(int argc, char** argv);
 
     int parse();
     void print_args() const;

@@ -7,7 +7,7 @@ class application
 {
 public:
     application(std::vector<image>&& images, const std::string& output_file);
-    void run();
+    void run(int ramp);
 
 private:
     std::vector<image> _images;

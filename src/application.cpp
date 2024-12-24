@@ -8,11 +8,11 @@ application::application(std::vector<image>&& images, const std::string& output_
 {
 }
 
-void application::run()
+void application::run(int ramp)
 {
     for (const image& img : _images)
     {
-        ascii_parser parser(img);
+        ascii_parser parser(img, static_cast<ascii_ramp>(ramp));
     }
 }
 

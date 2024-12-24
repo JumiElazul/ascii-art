@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-argument_parser::argument_parser(int argc, char** argv, int max_width)
+argument_parser::argument_parser(int argc, char** argv)
     : input_files(), output_file(), max_width(max_width), _argc(argc), _argv(argv) { }
 
 int argument_parser::parse()
@@ -20,7 +20,8 @@ int argument_parser::parse()
             ("help,H", "Produce help message")
             ("input,I", boost::program_options::value<std::vector<std::string>>(), "Name of input files to process into ascii")
             ("output,O", boost::program_options::value<std::string>()->default_value(default_output_path), "Name of output file to write to")
-            ("width,W", boost::program_options::value<int>()->default_value(max_width), "Max width in characters of the output ascii");
+            ("width,W", boost::program_options::value<int>(), "Max width in characters of the output ascii")
+            ("ramp,R", boost::program_options::value<int>()->default_value(0), "Ramp to use for ascii conversion, 0 for simple, 1 for complex");
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::command_line_parser(_argc, _argv).options(desc).positional(p).run(), vm);
         boost::program_options::notify(vm);
@@ -40,6 +41,11 @@ int argument_parser::parse()
         if (vm.count("width"))
         {
             max_width = vm["width"].as<int>();
+        }
+
+        if (vm.count("ramp"))
+        {
+            ramp = vm["ramp"].as<int>();
         }
         return 0;
     }
