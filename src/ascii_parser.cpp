@@ -1,11 +1,12 @@
 #include "ascii_parser.h"
 #include <cassert>
 #include <iostream>
+#include <fstream>
 
 std::string ascii_parser::_ascii_ramp_simple = "@%#*+=-:. ";
 std::string ascii_parser::_ascii_ramp_complex = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
 
-ascii_parser::ascii_parser(const image& img, ascii_ramp ramp)
+ascii_parser::ascii_parser(const image& img, std::fstream& file, ascii_ramp ramp)
 {
     const std::string& active_ramp = ramp == ascii_ramp::simple ? _ascii_ramp_simple : _ascii_ramp_complex;
 
@@ -21,11 +22,14 @@ ascii_parser::ascii_parser(const image& img, ascii_ramp ramp)
 
             const size_t ramp_index = gray * active_ramp.size() / 256;
 
+            assert(ramp_index >= 0);
             assert(ramp_index < active_ramp.size());
 
             const char ascii_char = active_ramp[ramp_index];
             std::cout << ascii_char;
+            file << ascii_char;
         }
         std::cout << '\n';
+        file << '\n';
     }
 }

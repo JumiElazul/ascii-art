@@ -9,6 +9,12 @@ argument_parser::argument_parser(int argc, char** argv)
 
 int argument_parser::parse()
 {
+    if (_argc < 2) {
+        std::cout << "[ ascii-art ]\n";
+        std::cout << "Run with --help for details.\n";
+        return 1;
+    }
+
     try
     {
         boost::program_options::options_description desc("[ ascii-art ] usage");
@@ -63,11 +69,13 @@ int argument_parser::parse()
 
 void argument_parser::print_args() const
 {
-    std::cout << "- Input files -\n";
+    std::cout << "Input files={";
     for (const std::string& s : input_files)
         std::cout << s << " ";
 
-    std::cout << "\n- Output file -\n" << output_file << '\n';
-    std::cout << "- Max width -\n";
-    std::cout << max_width << '\n';
+    std::cout << "}";
+
+    std::cout << " Output file={" << output_file << "}";
+    std::cout << " Max width={" << max_width << "}";
+    std::cout << " Ramp={" << ramp << "}\n";
 }

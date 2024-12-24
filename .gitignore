@@ -1,6 +1,9 @@
 # Created by https://www.toptal.com/developers/gitignore/api/cmake,linux,windows,visualstudio,c++
 # Edit at https://www.toptal.com/developers/gitignore?templates=cmake,linux,windows,visualstudio,c++
 
+**.png
+**.jpg
+
 ### C++ ###
 [Bb]in/*
 [Oo]bj/*

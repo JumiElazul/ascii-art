@@ -10,8 +10,6 @@ int main(int argc, char** argv)
     if (args.parse() != 0)
         return 1;
 
-    args.print_args();
-
     const std::vector<std::string>& input_files = args.input_files;
     const std::string& output_file = args.output_file;
     std::vector<image> images;
@@ -33,6 +31,6 @@ int main(int argc, char** argv)
         }
     }
 
-    application app(std::move(images), output_file);
-    app.run(ramp);
+    application app(std::move(images), output_file, ramp);
+    app.run();
 }

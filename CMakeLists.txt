@@ -39,6 +39,7 @@ endif()
 
 
 add_executable(ascii-art "src/main.cpp")
+install(TARGETS ascii-art RUNTIME DESTINATION bin)
 add_library(ascii-art-lib STATIC ${SOURCES} ${HEADERS})
 
 target_include_directories(ascii-art-lib PUBLIC include)

@@ -1,6 +1,6 @@
 {
   "name": "ascii-art",
-  "version-string": "0.0.1",
+  "version-string": "1.0.0",
   "dependencies": [
       "stb",
       "boost-program-options"
