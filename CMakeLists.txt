@@ -11,14 +11,16 @@ set(SOURCES
     "src/application.cpp"
 
     "src/argument_parser.cpp"
-    "src/image_loader.cpp"
+    "src/ascii_parser.cpp"
+    "src/image.cpp"
 )
 
 set(HEADERS
     "include/application.h"
 
     "include/argument_parser.h"
-    "include/image_loader.h"
+    "include/ascii_parser.h"
+    "include/image.h"
 )
 
 find_path(STB_INCLUDE_DIR "stb_image.h")

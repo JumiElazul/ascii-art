@@ -1,12 +1,11 @@
 #include "application.h"
 #include "argument_parser.h"
-#include "image_loader.h"
+#include "image.h"
 #include <vector>
 #include <string>
 
 int main(int argc, char** argv)
 {
-
     argument_parser args(argc, argv);
     if (args.parse() != 0)
         return 1;
@@ -27,5 +26,6 @@ int main(int argc, char** argv)
         }
     }
 
-    application app(std::move(images));
+    application app(std::move(images), output_file);
+    app.run();
 }

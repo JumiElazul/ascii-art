@@ -1,4 +1,4 @@
-#include "image_loader.h"
+#include "image.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -15,7 +15,7 @@ image::image(const std::string& image_path)
         return;
     }
 
-    std::cout << "image successfully loaded: " << this << '\n';
+    std::cout << "image with path={" << image_path << "} successfully loaded: " << *this << '\n';
 }
 
 image::~image()

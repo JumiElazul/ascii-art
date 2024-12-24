@@ -1,9 +1,18 @@
 #include "application.h"
-#include "image_loader.h"
+#include "ascii_parser.h"
+#include "image.h"
 #include <vector>
 
-application::application(std::vector<image>&& images)
-    : _images(std::move(images))
+application::application(std::vector<image>&& images, const std::string& output_file)
+    : _images(std::move(images)), _output_file(output_file)
 {
-
 }
+
+void application::run()
+{
+    for (const image& img : _images)
+    {
+        ascii_parser parser(img);
+    }
+}
+
