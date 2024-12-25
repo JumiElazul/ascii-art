@@ -5,7 +5,7 @@
 #include <vector>
 
 argument_parser::argument_parser(int argc, char** argv)
-    : input_files(), output_file(), max_width(max_width), _argc(argc), _argv(argv) { }
+    : input_files(), output_file(), max_width(), _argc(argc), _argv(argv) { }
 
 int argument_parser::parse()
 {
