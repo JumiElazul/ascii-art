@@ -10,27 +10,23 @@ int main(int argc, char** argv)
     if (args.parse() != 0)
         return 1;
 
-    const std::vector<std::string>& input_files = args.input_files;
-    const std::string& output_file = args.output_file;
+    parsed_args parsed_args = args.get_args();
     std::vector<image> images;
-    int max_width = args.max_width;
-    int ramp = args.ramp;
+    images.reserve(parsed_args.input_files.size());
 
-    images.reserve(input_files.size());
-
-    for (const std::string& image_path : input_files)
+    for (const std::string& image_path : parsed_args.input_files)
     {
         image img(image_path);
         if (img.data)
         {
-            if (max_width > 0 && img.width > max_width)
+            if (parsed_args.max_width > 0 && img.width > parsed_args.max_width)
             {
-                img.resize(max_width);
+                img.resize(parsed_args.max_width);
             }
             images.emplace_back(std::move(img));
         }
     }
 
-    application app(std::move(images), output_file, ramp);
+    application app(std::move(images), std::move(parsed_args));
     app.run();
 }

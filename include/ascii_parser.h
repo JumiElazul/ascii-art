@@ -1,7 +1,7 @@
 #ifndef JUMI_ASCII_ART_ASCII_PARSER_H
 #define JUMI_ASCII_ART_ASCII_PARSER_H
 #include "image.h"
-#include <iosfwd>
+#include <fstream>
 
 enum class ascii_ramp
 {
@@ -9,12 +9,13 @@ enum class ascii_ramp
     complex = 1,
 };
 
+struct parsed_args;
 class ascii_parser
 {
 static std::string _ascii_ramp_simple;
 static std::string _ascii_ramp_complex;
 public:
-    ascii_parser(const image& img, std::fstream& file, ascii_ramp ramp = ascii_ramp::simple);
+    ascii_parser(const image& img, const parsed_args& args, std::fstream& out_file);
 };
 
 #endif

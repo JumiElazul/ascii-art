@@ -1,4 +1,6 @@
 #include "ascii_parser.h"
+#include "argument_parser.h"
+#include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <fstream>
@@ -6,9 +8,16 @@
 std::string ascii_parser::_ascii_ramp_simple = "@%#*+=-:. ";
 std::string ascii_parser::_ascii_ramp_complex = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
 
-ascii_parser::ascii_parser(const image& img, std::fstream& file, ascii_ramp ramp)
+ascii_parser::ascii_parser(const image& img, const parsed_args& args, std::fstream& out_file)
 {
-    const std::string& active_ramp = ramp == ascii_ramp::simple ? _ascii_ramp_simple : _ascii_ramp_complex;
+    std::string& active_ramp = static_cast<ascii_ramp>(args.ramp) == ascii_ramp::simple
+        ? _ascii_ramp_simple
+        : _ascii_ramp_complex;
+    
+    if (args.invert)
+    {
+        std::reverse(active_ramp.begin(), active_ramp.end());
+    }
 
     for (size_t row = 0; row < img.height; ++row)
     {
@@ -27,9 +36,9 @@ ascii_parser::ascii_parser(const image& img, std::fstream& file, ascii_ramp ramp
 
             const char ascii_char = active_ramp[ramp_index];
             std::cout << ascii_char;
-            file << ascii_char;
+            out_file << ascii_char;
         }
         std::cout << '\n';
-        file << '\n';
+        out_file << '\n';
     }
 }

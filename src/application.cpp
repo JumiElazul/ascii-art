@@ -5,22 +5,22 @@
 #include <iostream>
 #include <vector>
 
-application::application(std::vector<image>&& images, const std::string& output_file, int ramp)
-    : _images(std::move(images)), _output_file(output_file), _ramp(static_cast<ascii_ramp>(ramp))
+application::application(std::vector<image>&& images, parsed_args&& args)
+    : _images(std::move(images)), _args(std::move(args))
 {
 }
 
 void application::run()
 {
-    std::fstream file(_output_file, std::ios::out);
+    std::fstream out_file(_args.output_file, std::ios::out);
     int count = 0;
     for (const image& img : _images)
     {
         ++count;
         std::cout << "Image " << count << ":\n";
-        file << "Image " << count << ":\n";
+        out_file << "Image " << count << ":\n";
 
-        ascii_parser parser(img, file, _ramp);
+        ascii_parser parser(img, _args, out_file);
     }
 }
 

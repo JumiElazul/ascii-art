@@ -3,21 +3,27 @@
 #include <string>
 #include <vector>
 
-class argument_parser
+struct parsed_args
 {
-static constexpr const char* const default_output_path = "output.txt";
-public:
     std::vector<std::string> input_files;
     std::string output_file;
     int max_width;
     int ramp;
+    bool invert;
+};
 
+class argument_parser
+{
+static constexpr const char* const default_output_path = "output.txt";
+public:
     argument_parser(int argc, char** argv);
 
     int parse();
+    const parsed_args& get_args() const;
     void print_args() const;
 
 private:
+    parsed_args _parsed;
     int _argc;
     char** _argv;
 };
