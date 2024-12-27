@@ -1,0 +1,12 @@
+--height or --aspect – Adjust the row scaling.
+--brightness and --contrast – Adjust image intensity.
+--grayscale {average|luminosity|custom} – Different grayscale formulas.
+--custom-ramp – Let the user supply a custom ASCII ramp string.
+--invert – Invert the intensity mapping.
+--flip-x / --flip-y – Flip horizontally or vertically.
+--dither – Enable or choose a dithering algorithm.
+--color – Output approximate color in ASCII using ANSI escape codes.
+
+Maybe?:
+Batch processing – Expand multi-file support to directories.
+Optional preview or GUI – offer a user-friendly visualization.
