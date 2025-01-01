@@ -2,8 +2,14 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
+#ifdef WIN32
+#include "stb_image_resize.h"
+#else
 #include "stb_image_resize2.h"
+#endif
+
 #include <iostream>
 
 image::image(const std::string& image_path)
@@ -71,11 +77,19 @@ void image::resize(int max_width)
         return;
     }
 
+#ifdef WIN32
+    stbir_resize_uint8(
+        data, width, height, 0,
+        new_data, new_width, new_height, 0,
+        color_channels
+    );
+#else
     stbir_resize_uint8_linear(
         data, width, height, 0,
         new_data, new_width, new_height, 0,
         (stbir_pixel_layout)color_channels
     );
+#endif
 
     stbi_image_free(data);
 
