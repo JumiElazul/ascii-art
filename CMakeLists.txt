@@ -23,6 +23,12 @@ set(HEADERS
     "include/image.h"
 )
 
+set(Boost_USE_STATIC_LIBS ON)
+
+if (MSVC)
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 find_path(STB_INCLUDE_DIR "stb_image.h")
 if(NOT STB_INCLUDE_DIR)
     message(FATAL_ERROR "Could not find stb_image.h. Make sure stb is installed in vcpkg.")
@@ -39,13 +45,14 @@ endif()
 
 
 add_executable(ascii-art "src/main.cpp")
-install(TARGETS ascii-art RUNTIME DESTINATION bin)
 add_library(ascii-art-lib STATIC ${SOURCES} ${HEADERS})
 
+install(TARGETS ascii-art RUNTIME DESTINATION bin)
+
 target_include_directories(ascii-art-lib PUBLIC include)
-target_link_libraries(ascii-art-lib PRIVATE stb)
 
-find_package(boost_program_options REQUIRED CONFIG)
+find_package(Boost REQUIRED COMPONENTS program_options)
+
 target_link_libraries(ascii-art-lib PRIVATE Boost::program_options)
-
+target_link_libraries(ascii-art-lib PRIVATE stb)
 target_link_libraries(ascii-art ascii-art-lib)

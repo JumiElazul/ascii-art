@@ -3,7 +3,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #define STB_IMAGE_RESIZE_IMPLEMENTATION
-#include "stb_image_resize2.h"
+#include "stb_image_resize.h"
 #include <iostream>
 
 image::image(const std::string& image_path)
@@ -71,10 +71,10 @@ void image::resize(int max_width)
         return;
     }
 
-    stbir_resize_uint8_linear(
+    stbir_resize_uint8(
         data, width, height, 0,
         new_data, new_width, new_height, 0,
-        (stbir_pixel_layout)color_channels
+        color_channels
     );
 
     stbi_image_free(data);
