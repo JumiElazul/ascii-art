@@ -27,8 +27,13 @@ int argument_parser::parse()
             ("input,I", boost::program_options::value<std::vector<std::string>>(), "Name of input files to process into ascii")
             ("output,O", boost::program_options::value<std::string>()->default_value(default_output_path), "Name of output file to write to")
             ("width,W", boost::program_options::value<int>(), "Max width in characters of the output ascii")
+            ("height,H", boost::program_options::value<int>(), "Max height in characters of the output ascii")
+            ("maintain-aspect,A", boost::program_options::bool_switch(&_parsed.maintain_aspect)->default_value(false), "Preserve aspect ratio when resizing image to width/height")
             ("ramp,R", boost::program_options::value<int>()->default_value(0), "Ramp to use for ascii conversion, 0 for simple, 1 for complex")
-            ("invert,N", boost::program_options::bool_switch(&_parsed.invert)->default_value(false), "Inverts the ascii-calculation so that dark pixels are the lightest and vice versa");
+            ("char-aspect-ratio,AR", boost::program_options::value<float>()->default_value(2.0f), "Ratio of character height to width in your terminal font")
+            ("invert,N", boost::program_options::bool_switch(&_parsed.invert)->default_value(false), "Inverts the ascii-calculation so that dark pixels are the lightest and vice versa")
+            ("flip-y,Y", boost::program_options::bool_switch(&_parsed.flip_y)->default_value(false), "Flips the image vertically")
+            ("flip-x,X", boost::program_options::bool_switch(&_parsed.flip_x)->default_value(false), "Flips the image horizontally");
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::command_line_parser(_argc, _argv).options(desc).positional(p).run(), vm);
         boost::program_options::notify(vm);
@@ -39,6 +44,8 @@ int argument_parser::parse()
         if (vm.count("output")) _parsed.output_file = vm["output"].as<std::string>();
         if (vm.count("width"))  _parsed.max_width = vm["width"].as<int>();
         if (vm.count("ramp"))   _parsed.ramp = vm["ramp"].as<int>();
+        if (vm.count("maintain-aspect")) _parsed.maintain_aspect = vm["maintain-aspect"].as<bool>();
+        if (vm.count("char-aspect-ratio")) _parsed.char_aspect_ratio = vm["char-aspect-ratio"].as<float>();
 
         return 0;
     }

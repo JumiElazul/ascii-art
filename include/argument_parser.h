@@ -8,8 +8,13 @@ struct parsed_args
     std::vector<std::string> input_files;
     std::string output_file;
     int max_width;
+    int max_height;
     int ramp;
+    float char_aspect_ratio;
+    bool maintain_aspect;
     bool invert;
+    bool flip_y;
+    bool flip_x;
 };
 
 class argument_parser
