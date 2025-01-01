@@ -19,11 +19,18 @@ ascii_parser::ascii_parser(const image& img, const parsed_args& args, std::fstre
         std::reverse(active_ramp.begin(), active_ramp.end());
     }
 
+    bool flip_x = args.flip_x;
+    bool flip_y = args.flip_y;
+
     for (size_t row = 0; row < img.height; ++row)
     {
+        const size_t actual_row = args.flip_y ? (img.height - 1 - row) : row;
+
         for (size_t col = 0; col < img.width; ++col)
         {
-            const size_t pixel_index = (row * img.width + col) * img.color_channels;
+            const size_t actual_col = args.flip_x ? (img.width - 1 - col) : col;
+
+            const size_t pixel_index = (actual_row * img.width + actual_col) * img.color_channels;
             const unsigned char r = img.data[pixel_index];
             const unsigned char g = img.data[pixel_index + 1];
             const unsigned char b = img.data[pixel_index + 2];

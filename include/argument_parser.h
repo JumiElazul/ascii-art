@@ -10,6 +10,8 @@ struct parsed_args
     int max_width;
     int ramp;
     bool invert;
+    bool flip_y;
+    bool flip_x;
 };
 
 class argument_parser

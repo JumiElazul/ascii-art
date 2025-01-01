@@ -28,7 +28,9 @@ int argument_parser::parse()
             ("output,O", boost::program_options::value<std::string>()->default_value(default_output_path), "Name of output file to write to")
             ("width,W", boost::program_options::value<int>(), "Max width in characters of the output ascii")
             ("ramp,R", boost::program_options::value<int>()->default_value(0), "Ramp to use for ascii conversion, 0 for simple, 1 for complex")
-            ("invert,N", boost::program_options::bool_switch(&_parsed.invert)->default_value(false), "Inverts the ascii-calculation so that dark pixels are the lightest and vice versa");
+            ("invert,N", boost::program_options::bool_switch(&_parsed.invert)->default_value(false), "Inverts the ascii-calculation so that dark pixels are the lightest and vice versa")
+            ("flip-y,Y", boost::program_options::bool_switch(&_parsed.flip_y)->default_value(false), "Flips the image vertically")
+            ("flip-x,X", boost::program_options::bool_switch(&_parsed.flip_x)->default_value(false), "Flips the image horizontally");
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::command_line_parser(_argc, _argv).options(desc).positional(p).run(), vm);
         boost::program_options::notify(vm);
