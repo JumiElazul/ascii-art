@@ -18,7 +18,7 @@ public:
     image(image&& rhs) noexcept;
     image& operator=(image&& rhs) noexcept;
 
-    void resize(int max_width);
+    void resize(int target_width, int target_height);
 };
 
 std::ostream& operator<<(std::ostream& os, const image& img);

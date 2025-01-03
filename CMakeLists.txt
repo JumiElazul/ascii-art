@@ -53,6 +53,11 @@ target_include_directories(ascii-art-lib PUBLIC include)
 find_package(Boost REQUIRED COMPONENTS program_options)
 find_package(fmt CONFIG REQUIRED)
 
+target_compile_definitions(ascii-art-lib PUBLIC
+    $<$<CONFIG:Debug>:DEBUG>
+    $<$<CONFIG:Release>:RELEASE>
+)
+
 target_link_libraries(ascii-art-lib PRIVATE
     Boost::program_options
     fmt::fmt

@@ -1,7 +1,7 @@
 #ifndef JUMI_ASCII_ART_ASCII_PARSER_H
 #define JUMI_ASCII_ART_ASCII_PARSER_H
 #include "image.h"
-#include <fstream>
+#include <iosfwd>
 
 enum class ascii_ramp
 {
@@ -18,6 +18,10 @@ public:
 private:
     std::string _ascii_ramp_simple;
     std::string _ascii_ramp_complex;
+
+    unsigned char get_grayscale_value(unsigned char r, unsigned char g, unsigned char b) const noexcept;
+    void write_char(std::fstream& file, char c);
+    void write_char_color(std::fstream& file, char c, unsigned char r, unsigned char g, unsigned char b);
 };
 
 #endif

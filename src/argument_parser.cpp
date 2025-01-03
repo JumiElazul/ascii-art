@@ -1,5 +1,6 @@
 #include "argument_parser.h"
 #include <boost/program_options.hpp>
+#include <boost/program_options/value_semantic.hpp>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -23,17 +24,19 @@ int argument_parser::parse()
         p.add("input", -1);
 
         desc.add_options()
-            ("help,H", "Produce help message")
+            ("help,h", "Produce help message")
             ("input,I", boost::program_options::value<std::vector<std::string>>(), "Name of input files to process into ascii")
             ("output,O", boost::program_options::value<std::string>()->default_value(default_output_path), "Name of output file to write to")
-            ("width,W", boost::program_options::value<int>(), "Max width in characters of the output ascii")
-            ("height,H", boost::program_options::value<int>(), "Max height in characters of the output ascii")
-            ("maintain-aspect,A", boost::program_options::bool_switch(&_parsed.maintain_aspect)->default_value(false), "Preserve aspect ratio when resizing image to width/height")
-            ("ramp,R", boost::program_options::value<int>()->default_value(0), "Ramp to use for ascii conversion, 0 for simple, 1 for complex")
-            ("char-aspect-ratio,AR", boost::program_options::value<float>()->default_value(2.0f), "Ratio of character height to width in your terminal font")
+            ("width,W", boost::program_options::value<int>(), "Width in characters of the output ascii.  If height is not set, aspect ratio will be maintained")
+            ("height,H", boost::program_options::value<int>(), "Height in characters of the output ascii. If width is not set, aspect ratio will be maintained")
+            ("ramp,R", boost::program_options::bool_switch(&_parsed.ramp)->default_value(false), "When set, use a more complicated ramp for ascii calculation")
             ("invert,N", boost::program_options::bool_switch(&_parsed.invert)->default_value(false), "Inverts the ascii-calculation so that dark pixels are the lightest and vice versa")
             ("flip-y,Y", boost::program_options::bool_switch(&_parsed.flip_y)->default_value(false), "Flips the image vertically")
-            ("flip-x,X", boost::program_options::bool_switch(&_parsed.flip_x)->default_value(false), "Flips the image horizontally");
+            ("flip-x,X", boost::program_options::bool_switch(&_parsed.flip_x)->default_value(false), "Flips the image horizontally")
+            ("color,C", boost::program_options::bool_switch(&_parsed.color)->default_value(false), "Retains the color and produces a colored ascii image")
+            ("char-aspect-ratio,A", boost::program_options::value<float>(&_parsed.char_aspect_ratio)->default_value(2.0f), "Aspect ratio of how much taller than wide the terminal characters are "
+             "for ascii conversion, since most terminal characters are taller than wide. 2.0 is the default, and will mean than for every 2 characters wide, the terminal is 1 character tall.  "
+             "This will not take effect when width and height are both set");
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::command_line_parser(_argc, _argv).options(desc).positional(p).run(), vm);
         boost::program_options::notify(vm);
@@ -42,12 +45,20 @@ int argument_parser::parse()
 
         if (vm.count("input"))  _parsed.input_files = vm["input"].as<std::vector<std::string>>();
         if (vm.count("output")) _parsed.output_file = vm["output"].as<std::string>();
-        if (vm.count("width"))  _parsed.max_width = vm["width"].as<int>();
-        if (vm.count("ramp"))   _parsed.ramp = vm["ramp"].as<int>();
-        if (vm.count("maintain-aspect")) _parsed.maintain_aspect = vm["maintain-aspect"].as<bool>();
+        if (vm.count("width"))  _parsed.width = vm["width"].as<int>();
+        if (vm.count("height")) _parsed.height = vm["height"].as<int>();
         if (vm.count("char-aspect-ratio")) _parsed.char_aspect_ratio = vm["char-aspect-ratio"].as<float>();
 
-        return 0;
+        try
+        {
+            verify_args(_parsed);
+            return 0;
+        }
+        catch (const std::invalid_argument& e)
+        {
+            std::cerr << e.what() << '\n';
+            return 1;
+        }
     }
     catch (const boost::wrapexcept<boost::program_options::unknown_option>& e)
     {
@@ -75,9 +86,15 @@ void argument_parser::print_args() const
     std::cout << "}";
 
     std::cout << " Output file={" << _parsed.output_file << "}";
-    std::cout << " Max width={" << _parsed.max_width << "}";
+    std::cout << " Max width={" << _parsed.width << "}";
     std::cout << " Ramp={" << _parsed.ramp << "}";
     std::cout << " Invert={" << _parsed.invert << "}";
 
     std::cout << '\n';
+}
+
+void argument_parser::verify_args(const parsed_args& args) const
+{
+    if (args.width  < 0) throw std::invalid_argument("Width must be greater than 0");
+    if (args.height < 0) throw std::invalid_argument("Height must be greater than 0");
 }
