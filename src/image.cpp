@@ -86,7 +86,7 @@ void image::resize(int max_width)
     stbir_resize_uint8_linear(
         data, width, height, 0,
         new_data, new_width, new_height, 0,
-        color_channels
+        (stbir_pixel_layout)color_channels
     );
 #endif
 
