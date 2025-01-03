@@ -25,7 +25,7 @@ set(HEADERS
 
 set(Boost_USE_STATIC_LIBS ON)
 
-if (MSVC)
+if(MSVC)
     set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
@@ -37,12 +37,11 @@ endif()
 add_library(stb INTERFACE)
 target_include_directories(stb INTERFACE ${STB_INCLUDE_DIR})
 
-if (MSVC)
+if(MSVC)
     target_compile_options(stb INTERFACE /W0)
 else()
     target_compile_options(stb INTERFACE -w)
 endif()
-
 
 add_executable(ascii-art "src/main.cpp")
 add_library(ascii-art-lib STATIC ${SOURCES} ${HEADERS})
@@ -52,7 +51,12 @@ install(TARGETS ascii-art RUNTIME DESTINATION bin)
 target_include_directories(ascii-art-lib PUBLIC include)
 
 find_package(Boost REQUIRED COMPONENTS program_options)
+find_package(fmt CONFIG REQUIRED)
 
-target_link_libraries(ascii-art-lib PRIVATE Boost::program_options)
-target_link_libraries(ascii-art-lib PRIVATE stb)
+target_link_libraries(ascii-art-lib PRIVATE
+    Boost::program_options
+    fmt::fmt
+    stb
+)
+
 target_link_libraries(ascii-art ascii-art-lib)
