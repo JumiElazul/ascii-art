@@ -20,7 +20,6 @@ struct parsed_args
 
 class argument_parser
 {
-static constexpr const char* const default_output_path = "output.txt";
 public:
     argument_parser(int argc, char** argv);
 

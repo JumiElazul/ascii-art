@@ -34,7 +34,7 @@ int argument_parser::parse()
         desc.add_options()
             ("help,h", "Produce help message")
             ("input,I", boost::program_options::value<std::vector<std::string>>(), "Name of input files to process into ascii")
-            ("output,O", boost::program_options::value<std::string>()->default_value(default_output_path), "Name of output file to write to")
+            ("output,O", boost::program_options::value<std::string>(), "Name of output file to write to")
             ("width,W", boost::program_options::value<int>(), "Width in characters of the output ascii.  If height is not set, aspect ratio will be maintained")
             ("height,H", boost::program_options::value<int>(), "Height in characters of the output ascii. If width is not set, aspect ratio will be maintained")
             ("ramp,R", boost::program_options::bool_switch(&_parsed.ramp)->default_value(false), "When set, use a more complicated ramp for ascii calculation")
@@ -44,14 +44,11 @@ int argument_parser::parse()
             ("color,C", boost::program_options::bool_switch(&_parsed.color)->default_value(false), "Retains the color and produces a colored ascii image")
             ("disable-console,D", boost::program_options::bool_switch(&_parsed.disable_console)->default_value(false), "Disables the console output for ascii art and only prints to file")
             ("char-aspect-ratio,A", boost::program_options::value<float>(&_parsed.char_aspect_ratio), "Aspect ratio of how much taller than wide the terminal characters are "
-             "for ascii conversion, since most terminal characters are taller than wide.  Given a value of 2.0, for every 2 characters wide, the terminal is 1 character tall.  "
+             "for ascii conversion.  Given a value of 2.0, for every 2 characters wide, the character is 1 character tall.  "
              "This will not take effect when width and height are both set");
         boost::program_options::variables_map vm;
         boost::program_options::store(boost::program_options::command_line_parser(_argc, _argv).options(desc).positional(p).run(), vm);
         boost::program_options::notify(vm);
-
-        std::cerr << "WIDTH PROVIDED: " << vm.count("width") << '\n';
-        std::cerr << "HEIGHT PROVIDED: " << vm.count("height") << '\n';
 
         if (vm.count("help")) std::cout << desc << '\n';
 
@@ -87,22 +84,6 @@ int argument_parser::parse()
 const parsed_args& argument_parser::get_args() const
 {
     return _parsed;
-}
-
-void argument_parser::print_args() const
-{
-    std::cout << "Input files={";
-    for (const std::string& s : _parsed.input_files)
-        std::cout << s << " ";
-
-    std::cout << "}";
-
-    std::cout << " Output file={" << _parsed.output_file << "}";
-    std::cout << " Max width={" << _parsed.width << "}";
-    std::cout << " Ramp={" << _parsed.ramp << "}";
-    std::cout << " Invert={" << _parsed.invert << "}";
-
-    std::cout << '\n';
 }
 
 void argument_parser::verify_args(const parsed_args& args) const
