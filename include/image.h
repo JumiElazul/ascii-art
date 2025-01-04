@@ -21,6 +21,7 @@ public:
     image& operator=(image&& rhs) noexcept;
 
 private:
+    std::pair<int, int> get_target_width_height(const parsed_args& parsed_args) const;
     void resize(int target_width, int target_height);
 };
 

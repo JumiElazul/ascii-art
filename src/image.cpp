@@ -26,39 +26,7 @@ image::image(const std::string& image_path, const parsed_args& parsed_args)
     }
 
     std::cout << "image with path={" << image_path << "} successfully loaded: " << *this << '\n';
-
-    bool user_specified_width =  (parsed_args.width != 0);
-    bool user_specified_height = (parsed_args.height != 0);
-
-    int target_width = 0;
-    int target_height = 0;
-
-    float char_aspect_ratio = parsed_args.char_aspect_ratio;
-    float img_height_f = static_cast<float>(height);
-    float img_width_f = static_cast<float>(width);
-
-    if (user_specified_width && user_specified_height)
-    {
-        target_width = parsed_args.width;
-        target_height = parsed_args.height;
-    }
-    else if (user_specified_width)
-    {
-        target_width = parsed_args.width;
-        float target_width_f = static_cast<float>(target_width);
-        target_height = static_cast<int>(img_height_f * target_width_f / img_width_f / char_aspect_ratio);
-    }
-    else if (user_specified_height)
-    {
-        target_height = parsed_args.height;
-        float target_height_f = static_cast<float>(target_height);
-        target_width = static_cast<int>(img_width_f * target_height_f / img_height_f * char_aspect_ratio);
-    }
-    else
-    {
-        target_width = width;
-        target_height = height;
-    }
+    auto [target_width, target_height] = get_target_width_height(parsed_args);
 
     if (target_width != width || target_height != height)
     {
@@ -99,6 +67,51 @@ image& image::operator=(image&& rhs) noexcept
     }
 
     return *this;
+}
+
+std::pair<int, int> image::get_target_width_height(const parsed_args& parsed_args) const
+{
+    bool user_specified_width =  (parsed_args.width != 0);
+    bool user_specified_height = (parsed_args.height != 0);
+    bool user_specified_char_aspect_ratio = (parsed_args.char_aspect_ratio >= 0.01f);
+
+    float char_aspect_ratio = parsed_args.char_aspect_ratio;
+    float img_height_f = static_cast<float>(height);
+    float img_width_f = static_cast<float>(width);
+
+    int target_width = 0;
+    int target_height = 0;
+
+    if (user_specified_width && user_specified_height)
+    {
+        target_width = parsed_args.width;
+        target_height = parsed_args.height;
+    }
+    else if (user_specified_width)
+    {
+        target_width = parsed_args.width;
+        float target_width_f = static_cast<float>(target_width);
+        target_height = static_cast<int>(img_height_f * target_width_f / img_width_f);
+
+        if (user_specified_char_aspect_ratio)
+            target_height /= char_aspect_ratio;
+    }
+    else if (user_specified_height)
+    {
+        target_height = parsed_args.height;
+        float target_height_f = static_cast<float>(target_height);
+        target_width = static_cast<int>(img_width_f * target_height_f / img_height_f);
+
+        if (user_specified_char_aspect_ratio)
+            target_width *= char_aspect_ratio;
+    }
+    else
+    {
+        target_width = width;
+        target_height = height;
+    }
+
+    return std::make_pair(target_width, target_height);
 }
 
 void image::resize(int target_width, int target_height)
