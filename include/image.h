@@ -22,7 +22,7 @@ public:
 
 private:
     std::pair<int, int> get_target_width_height(const parsed_args& parsed_args) const;
-    void resize(int target_width, int target_height);
+    void resize(int new_width, int new_height);
 };
 
 std::ostream& operator<<(std::ostream& os, const image& img);

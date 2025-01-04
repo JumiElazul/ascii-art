@@ -114,7 +114,7 @@ std::pair<int, int> image::get_target_width_height(const parsed_args& parsed_arg
     return std::make_pair(target_width, target_height);
 }
 
-void image::resize(int target_width, int target_height)
+void image::resize(int new_width, int new_height)
 {
 #ifdef DEBUG
     scoped_timer timer("image::resize()");
@@ -123,21 +123,12 @@ void image::resize(int target_width, int target_height)
     if (!data)
         return;
 
-    int new_width = target_width;
-    int new_height = target_height;
-
     if (new_width <= 0 || new_height <= 0)
-    {
-        std::cerr << "Invalid resize dimensions.\n";
-        return;
-    }
+        throw std::invalid_argument("new_width and new_height must be greater than 0");
 
     unsigned char* new_data = (unsigned char*)malloc(new_width * new_height * color_channels);
     if (!new_data)
-    {
-        std::cerr << "Failed to allocate memory for resized image.\n";
-        return;
-    }
+        throw std::bad_alloc();
 
 #ifdef WIN32
     stbir_resize_uint8(
