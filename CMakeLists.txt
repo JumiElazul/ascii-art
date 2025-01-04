@@ -42,6 +42,7 @@ endif()
 add_library(stb INTERFACE)
 target_include_directories(stb INTERFACE ${STB_INCLUDE_DIR})
 
+# Suppresses our build flags from being applied to the stb library
 if(MSVC)
     target_compile_options(stb INTERFACE /W0)
 else()
@@ -51,7 +52,7 @@ endif()
 add_executable(ascii-art "src/main.cpp")
 add_library(ascii-art-lib STATIC ${SOURCES} ${HEADERS} $<$<CONFIG:Debug>:${DEBUG_SOURCES_HEADERS}>)
 
-install(TARGETS ascii-art RUNTIME DESTINATION bin)
+install(TARGETS ascii-art)
 
 target_include_directories(ascii-art-lib PUBLIC include)
 
