@@ -12,7 +12,7 @@
 
 ascii_parser::ascii_parser(const image& img, const parsed_args& args, std::fstream* out_file)
     : _ascii_ramp_simple(" .:-=+*#%@")
-    , _ascii_ramp_complex(" .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$")
+    , _ascii_ramp_complex(" .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B$@")
     , _args(args)
 {
 #ifdef DEBUG
