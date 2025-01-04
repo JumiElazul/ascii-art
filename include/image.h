@@ -3,6 +3,8 @@
 #include <string>
 #include <iosfwd>
 
+struct parsed_args;
+
 class image
 {
 public:
@@ -11,13 +13,14 @@ public:
     int color_channels;
     unsigned char* data;
 
-    image(const std::string& image_path);
+    image(const std::string& image_path, const parsed_args& parsed_args);
     ~image();
     image(const image& rhs) = delete;
     image& operator=(const image& rhs) = delete;
     image(image&& rhs) noexcept;
     image& operator=(image&& rhs) noexcept;
 
+private:
     void resize(int target_width, int target_height);
 };
 

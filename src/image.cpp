@@ -1,4 +1,5 @@
 #include "image.h"
+#include "argument_parser.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -15,7 +16,7 @@
     #include "ascii_debug.h"
 #endif
 
-image::image(const std::string& image_path)
+image::image(const std::string& image_path, const parsed_args& parsed_args)
 {
     data = stbi_load(image_path.c_str(), &width, &height, &color_channels, 0);
     if (!data)
@@ -25,6 +26,45 @@ image::image(const std::string& image_path)
     }
 
     std::cout << "image with path={" << image_path << "} successfully loaded: " << *this << '\n';
+
+    bool user_specified_width =  (parsed_args.width != 0);
+    bool user_specified_height = (parsed_args.height != 0);
+
+    int target_width = 0;
+    int target_height = 0;
+
+    float char_aspect_ratio = parsed_args.char_aspect_ratio;
+    float img_height_f = static_cast<float>(height);
+    float img_width_f = static_cast<float>(width);
+
+    if (user_specified_width && user_specified_height)
+    {
+        target_width = parsed_args.width;
+        target_height = parsed_args.height;
+    }
+    else if (user_specified_width)
+    {
+        target_width = parsed_args.width;
+        float target_width_f = static_cast<float>(target_width);
+        target_height = static_cast<int>(img_height_f * target_width_f / img_width_f / char_aspect_ratio);
+    }
+    else if (user_specified_height)
+    {
+        target_height = parsed_args.height;
+        float target_height_f = static_cast<float>(target_height);
+        target_width = static_cast<int>(img_width_f * target_height_f / img_height_f * char_aspect_ratio);
+    }
+    else
+    {
+        target_width = width;
+        target_height = height;
+    }
+
+    if (target_width != width || target_height != height)
+    {
+        std::cout << "Resizing image from " << width << "x" << height << " to " << target_width << "x" << target_height << '\n';
+        resize(target_width, target_height);
+    }
 }
 
 image::~image()
