@@ -13,7 +13,7 @@ struct parsed_args;
 class ascii_parser
 {
 public:
-    ascii_parser(const image& img, const parsed_args& args, std::fstream& out_file);
+    ascii_parser(const image& img, const parsed_args& args, std::fstream* out_file = nullptr);
 
 private:
     std::string _ascii_ramp_simple;
@@ -21,8 +21,8 @@ private:
     const parsed_args& _args;
 
     unsigned char get_grayscale_value(unsigned char r, unsigned char g, unsigned char b) const noexcept;
-    void write_char(std::fstream& file, char c);
-    void write_char_color(std::fstream& file, char c, unsigned char r, unsigned char g, unsigned char b);
+    void write_char(std::fstream* file, char c);
+    void write_char_color(std::fstream* file, char c, unsigned char r, unsigned char g, unsigned char b);
 };
 
 #endif

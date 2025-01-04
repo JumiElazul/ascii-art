@@ -76,7 +76,7 @@ int argument_parser::parse()
     }
     catch (...) 
     {
-        std::cerr << "Exception swallower\n";
+        std::cerr << "Unknown error parsing arguments - likely a flag was specified but not set (example: -W without a following width)\n";
         return 1; 
     }
 }
