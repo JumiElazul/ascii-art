@@ -15,6 +15,7 @@ struct parsed_args
     bool flip_y;
     bool flip_x;
     bool color;
+    bool disable_console;
 };
 
 class argument_parser

@@ -18,6 +18,7 @@ public:
 private:
     std::string _ascii_ramp_simple;
     std::string _ascii_ramp_complex;
+    const parsed_args& _args;
 
     unsigned char get_grayscale_value(unsigned char r, unsigned char g, unsigned char b) const noexcept;
     void write_char(std::fstream& file, char c);

@@ -4,13 +4,21 @@
 #include <fmt/ostream.h>
 #include <algorithm>
 #include <cassert>
-#include <iostream>
 #include <fstream>
+
+#ifdef DEBUG
+    #include "ascii_debug.h"
+#endif
 
 ascii_parser::ascii_parser(const image& img, const parsed_args& args, std::fstream& out_file)
     : _ascii_ramp_simple("@%#*+=-:. ")
     , _ascii_ramp_complex("$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ")
+    , _args(args)
 {
+#ifdef DEBUG
+    scoped_timer timer("ascii_parser::ascii_parser()");
+#endif
+
     std::string& active_ramp = args.ramp ? _ascii_ramp_complex : _ascii_ramp_simple;
     if (args.invert)
         std::reverse(active_ramp.begin(), active_ramp.end());
@@ -54,12 +62,14 @@ unsigned char ascii_parser::get_grayscale_value(unsigned char r, unsigned char g
 
 void ascii_parser::write_char(std::fstream& out_file, char ascii_char)
 {
-    fmt::print("{}", ascii_char);
+    if (!_args.disable_console)
+        fmt::print("{}", ascii_char);
     fmt::print(out_file, "{}", ascii_char);
 }
 
 void ascii_parser::write_char_color(std::fstream& out_file, char ascii_char, unsigned char r, unsigned char g, unsigned char b)
 {
-    fmt::print(fg(fmt::rgb(r, g, b)), "{}", ascii_char);
+    if (!_args.disable_console)
+        fmt::print(fg(fmt::rgb(r, g, b)), "{}", ascii_char);
     fmt::print(out_file, "{}", ascii_char);
 }

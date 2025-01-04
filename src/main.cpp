@@ -5,8 +5,15 @@
 #include <vector>
 #include <string>
 
+#ifdef DEBUG
+    #include "ascii_debug.h"
+#endif
+
 int main(int argc, char** argv)
 {
+#ifdef DEBUG
+    scoped_timer timer("ascii-ast program execution time");
+#endif
     argument_parser args(argc, argv);
     if (args.parse() != 0)
         return 1;
@@ -53,7 +60,11 @@ int main(int argc, char** argv)
             target_height = img.height;
         }
 
-        img.resize(target_width, target_height);
+        if (target_width != img.width || target_height != img.height)
+        {
+            std::cout << "Resizing image from " << img.width << "x" << img.height << " to " << target_width << "x" << target_height << '\n';
+            img.resize(target_width, target_height);
+        }
 
         images.emplace_back(std::move(img));
     }

@@ -23,6 +23,11 @@ set(HEADERS
     "include/image.h"
 )
 
+set(DEBUG_SOURCES_HEADERS
+    "src/ascii_debug.cpp"
+    "include/ascii_debug.h"
+)
+
 set(Boost_USE_STATIC_LIBS ON)
 
 if(MSVC)
@@ -44,7 +49,7 @@ else()
 endif()
 
 add_executable(ascii-art "src/main.cpp")
-add_library(ascii-art-lib STATIC ${SOURCES} ${HEADERS})
+add_library(ascii-art-lib STATIC ${SOURCES} ${HEADERS} $<$<CONFIG:Debug>:${DEBUG_SOURCES_HEADERS}>)
 
 install(TARGETS ascii-art RUNTIME DESTINATION bin)
 

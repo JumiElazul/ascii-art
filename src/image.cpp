@@ -11,6 +11,10 @@
 #endif
 #include <iostream>
 
+#ifdef DEBUG
+    #include "ascii_debug.h"
+#endif
+
 image::image(const std::string& image_path)
 {
     data = stbi_load(image_path.c_str(), &width, &height, &color_channels, 0);
@@ -59,6 +63,10 @@ image& image::operator=(image&& rhs) noexcept
 
 void image::resize(int target_width, int target_height)
 {
+#ifdef DEBUG
+    scoped_timer timer("image::resize()");
+#endif
+
     if (!data)
         return;
 
@@ -95,8 +103,8 @@ void image::resize(int target_width, int target_height)
     stbi_image_free(data);
 
     data = new_data;
-    width = new_width;
-    height = new_height;
+    this->width = new_width;
+    this->height = new_height;
 }
 
 std::ostream& operator<<(std::ostream& os, const image& img)
